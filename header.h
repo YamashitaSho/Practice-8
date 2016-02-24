@@ -31,7 +31,6 @@
 #define ERROR_SOCKET_BIND 2003          //bind失敗
 #define ERROR_SOCKET_LISTEN 2004        //listen失敗
 #define ERROR_SOCKET_ACCEPT 2005        //接続受付失敗
-#define ERROR_GETHOSTBY_FAILED 2006     //相手のホスト、ポート番号取得失敗
 #define ERROR_SOCKET_CLOSE 2007         //ソケットクローズ失敗
 
 #define ERROR_CONNECT 2008              //接続エラー

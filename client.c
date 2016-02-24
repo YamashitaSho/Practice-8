@@ -192,21 +192,23 @@ int transmission_filename(int socketid){
 }
 //ファイル内容受信
 int receive_filedata(int socketid, char *receive_data){
-    char bufc = '\0';
+    char bufc[256];
     char header[4];
     
     memset(header,'\0',4);
     for(int i=0;i<3;i++){
-        read ( socketid , &bufc , 1);
-        strncat(header , &bufc , 1);
+        memset(bufc,'\0',256);
+        read ( socketid , bufc , 1);
+        strncat(header , bufc , 1);
     }
     if ( header[0] == 'T'){
         while (1){
-            read ( socketid , &bufc , 1);
-            if ( bufc == '\0' ){
+            memset(bufc,'\0',256);
+            read ( socketid , bufc , 1);
+            if ( bufc[0] == '\0' ){
                 break;
             } else {
-                strncat(receive_data , &bufc , 1);
+                strncat(receive_data , bufc , 1);
             }
         }
         printf("%s\n%luバイト受信しました。\n",receive_data,strlen(receive_data));
