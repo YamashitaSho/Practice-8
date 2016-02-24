@@ -10,14 +10,20 @@ clientからファイル名が送られてくるので、文字列ファイル�
 int server_main(){
      int listening_socket;
      int connected_socket;
+     struct addrinfo server;                            //全包括(仮)
+     struct addrinfo *c_name;                            //接続してきたクライアントのホスト取得用
      struct sockaddr_in server_addr;                    //<netinet/in.h>に定義されている
-     struct hostent *peer_host;
      struct sockaddr_in peer_sin;
      socklen_t len = sizeof(struct sockaddr_in);
      int ret;
      int sock_optival = 1;
      int port = DEFAULT_PORT;
-
+     
+     memset(&server,0,sizeof(server));
+     memset(&c_name,0,sizeof(c_name));
+     server.ai_socktype = SOCK_STREAM;
+     server.ai_family = AF_INET;
+     
      //ソケットを作成
      listening_socket = socket(AF_INET, SOCK_STREAM, 0);
      if ( listening_socket == -1){
@@ -38,7 +44,8 @@ int server_main(){
      if ( bind( listening_socket, (struct sockaddr *)&server_addr, sizeof(server_addr) ) < 0 ){
           error_message(ERROR_SOCKET_BIND);
      }
-
+    
+     
 
      //ポートを見張るようにOSに命令する
      ret = listen ( listening_socket, SOMAXCONN) ;
@@ -53,18 +60,10 @@ int server_main(){
           if ( connected_socket == -1){
                error_message(ERROR_SOCKET_ACCEPT);
           }
-          //相手側のホスト、ポート番号を表示
-          peer_host = gethostbyaddr( (char *)(&peer_sin.sin_addr.s_addr) , sizeof(peer_sin.sin_addr), AF_INET);
-          if (peer_host == NULL){
-               error_message(ERROR_GETHOSTBY_FAILED);
-          }
-          
-          printf("接続しました:%s[%s]:%d\n", peer_host->h_name, inet_ntoa(peer_sin.sin_addr), ntohs(peer_sin.sin_port) );
-          
-          //データのやりとり
-          server_receive_transmission( connected_socket );
+          printf("接続しました:%s\n",inet_ntoa(peer_sin.sin_addr));   //クライアントのIPアドレスを表示
+          server_receive_transmission( connected_socket );          //データのやりとり
 
-          printf("接続が切れました。引き続きポート%dで接続待ちを行います。\n",port);
+          printf("接続が切れました。引き続き接続待ちを行います。\n");
           ret = close(connected_socket);
           if (ret == -1){
                error_message(ERROR_SOCKET_CLOSE);

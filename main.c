@@ -141,10 +141,6 @@ void error_message(int err){
         printf("ソケット通信の受付に失敗しました。\n");
         exit(0);
         
-      case ERROR_GETHOSTBY_FAILED:
-        printf("相手のホスト・ポート番号の取得に失敗しました。");
-        exit(0);
-        
       case ERROR_SOCKET_CLOSE:
         printf("ソケットのクローズに失敗しました。\n");
         exit(0);
