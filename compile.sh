@@ -1,3 +1,3 @@
 #!/bin/sh
 make
-gcc -Wall -o tc main.o
+gcc -Wall -o tcwebngin main.o
